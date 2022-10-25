@@ -1,3 +1,7 @@
+# don't want to push the actual spendings spreadsheet for privacy reasons
+spendings.xlsx
+
+# R-relateed stuff
 .Rproj.user
 .Rhistory
 .RData
