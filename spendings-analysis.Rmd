@@ -1,0 +1,81 @@
+---
+title: "Analysis of my spendings"
+author: "Samo Kolter"
+date: '2022-06-07'
+date: "`r Sys.setlocale('LC_TIME', 'en_GB.UTF-8'); format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true # activate table of content
+    toc_depth: 3
+    number_sections: true
+  pdf_document:
+    toc: true # activate table of content
+    toc_depth: 3
+    number_sections: true
+    latex_engine: xelatex
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+```{r}
+if (!require(pacman)) install.packages('pacman')
+library(pacman)
+```
+
+```{r}
+p_load(tidyverse, readxl)
+```
+
+```{r}
+excel_file_path <- "spendings.xlsx"
+
+sheet_names <- excel_sheets(excel_file_path)
+sheet_names
+```
+```{r}
+length(sheet_names)
+sheet_names <- setdiff(sheet_names, str_subset(sheet_names, "Tabellenblatt17"))
+length(sheet_names)
+sheet_names
+```
+
+
+```{r}
+for (year in c("2017", "2018", "2019", "2020", "2021", "2022")) {
+  matches <- str_subset(sheet_names, fixed(year))
+  writeLines(paste(length(matches), "matches"))
+  print(matches)
+}
+
+```
+
+```{r}
+sheets <- lapply(sheet_names, read_excel,
+                 path = excel_file_path, 
+                 col_names = c("Date", "Purpose", "Amount"),
+                 progress = TRUE)
+```
+```{r}
+names(sheets) <- sheet_names
+```
+
+
+```{r}
+col_counts <- sapply(sheets, ncol)
+unique(col_counts)
+```
+
+```{r}
+data <- bind_rows(sheets)
+```
+
+```{r}
+head(data)
+dim(data)
+```
+
+
+
